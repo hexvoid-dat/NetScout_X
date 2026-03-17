@@ -1,0 +1,34 @@
+# Isolated network environment for testing net-scout vulnerability detection.
+networks:
+  scout-net:
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
+
+services:
+  # 1. FTP Server (vsFTPd 2.3.4 - backdoor vulnerable)
+  ftp-vuln:
+    image: vulfocus/vsftpd-cve_2011_2523
+    networks:
+      scout-net:
+        ipv4_address: 172.28.0.10
+    ports:
+      - "21:21"
+
+  # 2. SSH Server (OpenSSH - user enumeration vulnerable)
+  ssh-vuln:
+    image: vulfocus/openssh-cve_2018_15473
+    networks:
+      scout-net:
+        ipv4_address: 172.28.0.20
+    ports:
+      - "22:22"
+
+  # 3. Apache Server (2.4.29 - path traversal vulnerable)
+  apache-vuln:
+    image: vulfocus/apache2-cve_2018_1312
+    networks:
+      scout-net:
+        ipv4_address: 172.28.0.30
+    ports:
+      - "80:80"
