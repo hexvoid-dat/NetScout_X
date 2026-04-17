@@ -514,17 +514,17 @@ NetScoutX jest wydany na licencji MIT. Szczegóły znajdziesz w pliku `LICENSE`.
 
 **Hexe**
 
-* Founder of Synth1ca Cybersec
-* Full-stack Developer
+* Founder of SYNTH1CA LABS | PROSTA SPÓŁKA AKCYJNA
+* CFO - Head of developers
 * Cybersecurity Engineer
-* Tattoo Artist („13ttt”)
+* ex Tattoo Artist 
 
 ## Credits
 
 * `gopacket` – solidny fundament do capture i dekodowania.
 * `golang.org/x/net/icmp` – pod TTL / ICMP.
 * Społeczność – za feedback, bug reporty i pomysły.
-* `https://www.linkedin.com/in/lucas-piatek-891201376/` i `https://varasystems.eu/` – jeśli chcesz złapać Hexe poza GitHubem.
+* `https://www.linkedin.com/in/lucas-piatek-891201376/` i `https://varasystems.eu/` oraz `https://entropy.varasystems.eu/` – jeśli chcesz obczaić mnie poza GitHubem.
 
 Jeśli interesuje Cię, co dalej z projektem, zajrzyj do `codozrobienia.md` – tam są bardziej „ludzkie” notatki z pomysłami na rozwój.
 ---
