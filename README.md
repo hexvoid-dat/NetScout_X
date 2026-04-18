@@ -4,9 +4,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://github.com/hexe/net-scout/actions/workflows/go.yml/badge.svg)](https://github.com/hexe/net-scout/actions/workflows/go.yml)
 
-<p align="center">
-  <img src="assets/netscoutxbanner.jpeg" alt="NetScoutX banner" width="480" />
-</p>
 
 ```
   _   _      _   ____                  _   __  __
