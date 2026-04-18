@@ -4,6 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://github.com/hexe/net-scout/actions/workflows/go.yml/badge.svg)](https://github.com/hexe/net-scout/actions/workflows/go.yml)
 
+
 <p align="center">
   <img src="assets/netscoutxbanner.jpeg" alt="NetScoutX banner" width="480" />
 </p>
@@ -16,90 +17,97 @@
  |_| \_|\___|\__|____/ \___\___/ \__,_|\__/_/\_\
 ```
 
-
-ENG_version of README.md if u want to read in PL (my native lang) u need to search there ---> /NetScout_X/docs/README_PL.md
-
 ## Project Overview
 
+PL
+NetScoutX - Network scanner z pasywną analizą ruchu i risk scoringiem ( a niedługo wiele więcej )
+-------------------------------------------------------------------------------------------------
+ENG
 NetScoutX - Network scanner with passive traffic analysis and risk scoring (and much more coming soon)
+
 
 <p align="center">
   <img src="assets/sscli.png" alt="NetScoutX CLI screenshot" width="700" />
 </p>
 
+
+
+
 ## Quickstart
 
-If you just want to fire up the tool and see what's happening on your network:
+Jeśli chcesz po prostu odpalić toola i zobaczyć, co się dzieje w sieci:
 
 ```bash
-# Interactive mode (simplest start)
+# Tryb interaktywny (najprostszy start)
 sudo netscoutx
 
-# Quick active scan e.g., home network
+# Szybki aktywny skan np. domowej sieci
 sudo net-scout -subnet 192.168.0.0/24 -output scan.json
 
-# Active scan + short passive listen
+# Aktywny skan + krótki podsłuch pasywny
 sudo net-scout -subnet 192.168.0.0/24 -passive-duration 20s -output baseline.json
 ```
 
 ## Features
 
-NetScoutX doesn't try to be everything at once. It focuses on the network and helping you quickly spot which hosts are interesting or suspicious.
+NetScoutX nie próbuje być wszystkim naraz. Skupia się na sieci i na tym, żebyś szybko zobaczył, które hosty są ciekawe lub podejrzane.
 
 ### Active Engine
 
-* **Host discovery:** Lightweight TCP discovery across a given range, probing common ports (80, 22, 21, 443).
-* **Port scanning:** Parallel TCP scan for a sensible list of services (20, 21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 445, 993, 995, 1723, 3306, 3389, 5900, 8080).
-* **UDP scanning:** Poking selected UDP services (DNS 53, NTP 123, SNMP 161, SSDP 1900, mDNS 5353) with service identification.
-* **Service fingerprinting:** Banners / service versions for SSH, HTTP (Server), FTP, and a few others.
-* **OS guessing:** Best-effort guess based on TTL and banners – not magic, just a solid estimate.
-* **Vulnerability lookup:** Simple built-in "vuln DB" based on banners – enough to catch the obvious low-hanging fruit.
+* **Host discovery:** Lekki discovery po TCP na zadanym zakresie, z sondowaniem popularnych portów (80, 22, 21, 443).
+* **Port scanning:** Równoległy skan TCP dla sensownej listy usług (20, 21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 445, 993, 995, 1723, 3306, 3389, 5900, 8080).
+* **UDP scanning:** Strzelanie w wybrane UDP (DNS 53, NTP 123, SNMP 161, SSDP 1900, mDNS 5353) z rozpoznaniem usług.
+* **Service fingerprinting:** Banners / wersje usług dla SSH, HTTP (Server), FTP i kilku innych.
+* **OS guessing:** Zgaduj-zgadula na podstawie TTL i bannerów – „best effort”, nie magia.
+* **Vulnerability lookup:** Prosty wbudowany „vuln DB” oparty na bannerach – wystarcza, żeby złapać oczywiste kwiatki.
 
-### Passive Engine (via `gopacket` / `libpcap`)
+### Passive Engine (na `gopacket` / `libpcap`)
 
-* **Multi-interface capture:** Listens on multiple interfaces in parallel.
-* **ARP passive discovery:** Tracking ARP traffic, mapping IP ↔ MAC, vendor lookup via OUI.
-* **DHCP parsing:** Extracting IP assignments, hostnames, and vendor class. Detects DHCP servers and potential rogue ones.
-* **mDNS service discovery:** Reading services like `_http._tcp.local` – perfect for catching IoT devices and their "talents." Flags sensitive advertisements via mDNS.
-* **DNS query parsing:** Analyzing DNS queries, detecting high-entropy domains (DGA) and unusual TLDs.
-* **TLS JA3 fingerprinting:** Extracting JA3 from ClientHello to distinguish client types (browsers, tools, malware). Note: this feature is still under development.
-* **Passive scoring contribution:** Everything observed passively contributes to the host's risk score.
+* **Multi-interface capture:** Podsłuch na wielu interfejsach równolegle.
+* **ARP passive discovery:** Śledzenie ARP, mapowanie IP ↔ MAC, lookup vendorów po OUI.
+* **DHCP parsing:** Wyciąganie przydziałów IP, hostname’ów i vendor class. Wykrywanie DHCP serwerów i ew. podejrzanych / „rogue”.
+* **mDNS service discovery:** Odczytywanie usług typu `_http._tcp.local` itp. – idealne, żeby złapać IoT-y i ich „talenty”. Flagowanie wrażliwych ogłoszeń przez mDNS.
+* **DNS query parsing:** Analiza zapytań DNS, wykrywanie domen o wysokiej entropii (DGA) i nietypowych TLD.
+* **TLS JA3 fingerprinting:** Wyciąganie JA3 z ClientHello, żeby rozróżniać typy klientów (przeglądarki, narzędzia, malware). Uwaga: funkcja wciąż w rozbudowie.
+* **Passive scoring contribution:** Wszystko, co zobaczymy pasywnie, idzie do wyniku ryzyka hosta.
 
 ### ARP Analysis
 
-* **Structured anomalies:** Detects `ip_conflict` (one IP, multiple MACs) and `greedy_mac` (one MAC, multiple IPs).
-* **Severity classification:** Tagged risk levels (High / Medium / Low), with an attempt to recognize "it's just a gateway, don't panic."
-* **Impact on risk score:** ARP findings aren't just logged "for later" – they directly increase the host's score.
+* **Strukturyzowane anomalie:** Wykrywanie `ip_conflict` (jeden IP, wiele MAC) oraz `greedy_mac` (jeden MAC, wiele IP).
+* **Klasyfikacja powagi:** Otagowane poziomy ryzyka (High / Medium / Low), z próbą rozpoznania „to tylko gateway, nie panikuj”.
+* **Wpływ na risk score:** ARP nie ląduje w logu „na potem” – bezpośrednio podbija punktację hosta.
 
 ### Command-Line Interfaces (CLIs)
 
-You have two approaches to choose from:
+Masz do wyboru dwa podejścia:
 
-1. **`net-scout` (Flag-based CLI):** No frills, ideal for scripting and automation.
-2. **`net-scout-cli` (`netscoutx` – interactive TUI):**
-   * **Quick scan:** Auto-detects subnet and runs active + passive scanning immediately.
-   * **Custom scan:** Manually enter CIDR, followed by the same pipeline.
-   * **Passive-only:** Listen only, zero generated traffic.
-   * **Merged overview:** A single table view showing IP / MAC / vendor / risk / JA3 / ports.
-   * **Passive summary:** Aggregated statistics from passive capture.
-   * **Settings:** Toggle TTL OS fingerprinting, UDP, etc.
-   * **JSON export:** Full report for further processing.
-   * **Result diffing:** Compare the current scan against a baseline JSON (drift, new services, new risks).
+1. **`net-scout` (CLI „na flagach”):** Bez udziwnień, dobre do skryptów i automatyzacji.
+2. **`net-scout-cli` (`netscoutx` – interaktywny TUI):**
+   * **Quick scan:** Auto-detekcja podsieci i od razu aktywne + pasywne skanowanie.
+   * **Custom scan:** Ręcznie podany CIDR, dalej ten sam pipeline.
+   * **Passive-only:** Tylko podsłuch, zero generowanego ruchu.
+   * **Merged overview:** Jedna tabela z widokiem IP / MAC / vendor / risk / JA3 / porty.
+   * **Passive summary:** Zbiorcze statystyki z pasywki.
+   * **Settings:** Włączanie / wyłączanie TTL OS fingerprint, UDP itp.
+   * **JSON export:** Pełny raport do dalszego przetwarzania.
+   * **Result diffing:** Porównanie aktualnego skanu z bazowym JSON-em (drift, nowe usługi, nowe ryzyka).
+
+
 
 ## Why NetScoutX vs Nmap?
 
-NetScoutX isn't trying to kill Nmap – it's designed to work alongside it.
+NetScoutX nie próbuje zabić Nmapa – ma z nim współpracować.
 
-- **Active + Passive:** Simultaneously scans and listens, so it catches hosts that might not respond to simple SYN probes.
-- **Built-in risk scoring:** No need to stare at a list of ports. You immediately see which hosts are "red."
-- **Anomaly detection:** ARP, DHCP, DNS, mDNS – heuristics that surface IP conflicts, suspicious DHCP activity, weird domains, or "chatty" IoT devices.
-- **Baseline diffing:** JSON reports can be compared against each other – perfect for detecting changes over time.
+- **Aktywne + pasywne:** Jednocześnie skanuje i podsłuchuje, więc łapie hosty, które niekoniecznie odpowiadają na proste SYN-y.
+- **Wbudowany risk scoring:** Nie musisz się wpatrywać w listę portów. Od razu widzisz, które hosty są „czerwone”.
+- **Anomaly detection:** ARP, DHCP, DNS, mDNS – heurystyki, które wyciągają na wierzch konflikty IP, podejrzane DHCP, dziwne domeny czy „gadające” IoT-y.
+- **Baseline diffing:** Raporty JSON można ze sobą porównywać – idealne do wyłapywania zmian w czasie.
 
-The best results come from running NetScoutX alongside Nmap and your other favorite tools. Each does its own job, and you get a fuller picture of what's alive on the network.
+Najlepszy efekt jest wtedy, gdy odpalasz NetScoutX obok Nmapa i innych ulubionych narzędzi. Każde robi swoje, a Ty dostajesz pełniejszy obraz tego, co żyje w sieci.
 
 ## Architecture Overview
 
-Under the hood, NetScoutX looks roughly like this:
+Pod maską NetScoutX wygląda mniej więcej tak:
 
 ```
 +-------------------+       +-------------------+
@@ -144,41 +152,41 @@ Under the hood, NetScoutX looks roughly like this:
 
 ### Key Components
 
-* `internal/scanner` – all active scan logic: discovery, ports, OS guess, risk score.
-* `internal/passive` – passive engine: capture, parsing ARP / DHCP / mDNS / DNS / TLS.
-* `internal/merge` – where active and passive data are stitched together into a single host representation.
-* `internal/report` – generating readable console output and JSON.
-* `cmd/net-scout` and `cmd/net-scout-cli` – entrypoints for both CLIs.
+* `internal/scanner` – cała logika aktywnego skanu: discovery, porty, OS guess, risk score.
+* `internal/passive` – silnik pasywny: capture, parsowanie ARP / DHCP / mDNS / DNS / TLS.
+* `internal/merge` – miejsce, gdzie aktywne i pasywne dane sklejają się w jedną reprezentację hosta.
+* `internal/report` – generowanie czytelnego outputu w konsoli i JSON.
+* `cmd/net-scout` i `cmd/net-scout-cli` – entrypointy do obu CLI.
 
 ## Installation
 
-To build NetScoutX, you need Go 1.22+ and `libpcap`.
+Do zbudowania NetScoutX potrzebujesz Go 1.22+ i `libpcap`.
 
 ### Prerequisites
 
-* **Go 1.22+** – standard Go installation.
+* **Go 1.22+** – standardowa instalacja Go.
 * **`libpcap` dev:**
   * Ubuntu/Debian: `sudo apt-get update && sudo apt-get install libpcap-dev`
   * CentOS/RHEL: `sudo yum install libpcap-devel`
   * macOS: `brew install libpcap`
 
-### "Official" Installation (system-wide)
+### „Oficjalna” instalacja (system-wide)
 
-1. Build the interactive CLI:
+1. Budowanie interaktywnego CLI:
 
    ```bash
    go build -o netscoutx ./cmd/net-scout-cli
    ```
 
-2. Move the binary somewhere in your `PATH`:
+2. Przeniesienie binarki gdzieś w `PATH`:
 
    ```bash
    sudo mv netscoutx /usr/local/bin/
    ```
 
-   In practice, you'll most often run `netscoutx` with `sudo`. Passive capture / TTL fingerprinting requires access to raw sockets (e.g., `setcap cap_net_raw,cap_net_admin+ep /path/to/netscoutx`).
+   W praktyce `netscoutx` najczęściej odpalisz z `sudo`. Do pasywki / TTL fingerprintingu potrzebny jest dostęp do raw socketów (np. `setcap cap_net_raw,cap_net_admin+ep /path/to/netscoutx`).
 
-### Building the Flag-based CLI
+### Budowanie CLI na flagach
 
 ```bash
 go build -o net-scout ./cmd/net-scout
@@ -186,15 +194,15 @@ go build -o net-scout ./cmd/net-scout
 
 ## Usage Examples
 
-### Interactive CLI (`netscoutx`)
+### Interaktywny CLI (`netscoutx`)
 
-The simplest path:
+Najprostsza ścieżka:
 
 ```bash
 sudo netscoutx
 ```
 
-You'll see the main menu:
+Zobaczysz główne menu:
 
 ```text
 MAIN MENU
@@ -208,9 +216,9 @@ MAIN MENU
   8) Passive scan (listen only, no packets sent)
 ```
 
-#### Example: Quick Scan (active + passive)
+#### Przykład: Quick Scan (aktywny + pasywny)
 
-Option `1` runs the full pipeline on the detected subnet.
+Opcja `1` odpala pełen pipeline na wykrytej podsieci.
 
 ```text
 $ sudo netscoutx
@@ -218,7 +226,7 @@ $ sudo netscoutx
  | \ | | ___| |_/ ___|  ___ ___  _   _| |_ \ \/ /
  |  \| |/ _ \ __\___ \ / __/ _ \| | | | __| \  / 
  | |\  |  __/ |_ ___) | (_| (_) | |_| | |_ /  \ 
- |_| \_|\___|\__|____/ \___\___/ \__,_|\__/_/\_/
+ |_| \_|\___|\__|____/ \___\___/ \__,_|\__/_/\_\
 Welcome to NetScoutX!
    Scan your network, enumerate hosts, and highlight security risks.
    Choose an option from the menu below:
@@ -309,9 +317,9 @@ HOST: 192.168.1.101 (00:aa:bb:cc:dd:ee)
   Low risk:    1
 ```
 
-#### Example: Passive Only
+#### Przykład: tylko pasywka
 
-Option `8` runs the passive engine alone. No outgoing packets, just listening.
+Opcja `8` odpala sam silnik pasywny. Żadnych pakietów wychodzących, tylko podsłuch.
 
 ```text
 $ sudo netscoutx
@@ -346,51 +354,51 @@ IP             MAC                VENDOR          HOSTNAME        RISK          
 ### Flag-based CLI (`net-scout`)
 
 ```bash
-# Simple active scan
+# Prosty skan aktywny
 sudo ./net-scout -subnet 192.168.1.0/24 -output scan_report.json
 
-# Active scan + UDP + 30s passive
+# Aktywny skan + UDP + pasywka 30s
 sudo ./net-scout -subnet 192.168.1.0/24 -enable-udp -passive-duration 30s -output scan_report_full.json
 ```
 
-## Risk Scoring – What's the Deal with the Points?
+## Risk Scoring – o co chodzi z punktami
 
-NetScoutX calculates a risk score on a scale of 0–100. This isn't CVSS; it's a quick heuristic to tell you "what to look at first."
+NetScoutX liczy wynik ryzyka w skali 0–100. To nie jest CVSS, tylko szybka heurystyka, która ma Ci powiedzieć „na co spojrzeć najpierw”.
 
-Factors considered include:
+Pod uwagę brane są m.in.:
 
-* **Open ports:** each open port adds something.
-* **Vulnerabilities:** vulnerabilities derived from banners (CRITICAL / HIGH / MEDIUM) significantly increase the score.
-* **Specifically dangerous services:** Telnet, SMB, RDP, and the like.
-* **HTTP without HTTPS:** HTTP on 80 without a sensible HTTPS on 443 = extra points.
-* **ARP anomalies:** IP conflict / strangely behaving MAC = substantial risk bonus.
-* **Passive signals:**
-  * hosts observed only passively,
-  * presence of JA3,
-  * DNS queries to strange / "entropic" domains,
-  * leaks via mDNS,
-  * potentially rogue DHCP.
+* **Open ports:** każdy otwarty port coś dokłada.
+* **Vulnerabilities:** podatności wynikające z bannerów (CRITICAL / HIGH / MEDIUM) mocno podnoszą punktację.
+* **Konkretnie niebezpieczne usługi:** Telnet, SMB, RDP i spółka.
+* **HTTP bez HTTPS:** HTTP na 80 bez sensownego HTTPS na 443 = dodatkowe punkty.
+* **ARP anomalies:** konflikt IP / dziwnie zachowujący się MAC = spory bonus do ryzyka.
+* **Sygnały z pasywki:**
+  * hosty widziane tylko pasywnie,
+  * obecność JA3,
+  * DNS-y do dziwnych / „entropijnych” domen,
+  * wycieki przez mDNS,
+  * potencjalnie rogue DHCP.
 
 ## Anomaly Detection
 
-NetScoutX doesn't just list hosts; it tries to explain why something might be off.
+NetScoutX nie tylko wypisuje hosty, ale też stara się wytłumaczyć, dlaczego coś jest nie tak.
 
 * **ARP:**
-  * `ip_conflict` – the same IP seen from different MACs (immediately suggests ARP spoofing or a serious misconfiguration).
-  * `greedy_mac` – one MAC collecting many IPs. Sometimes this is a normal router, sometimes something more creative. The tool tries to filter out typical gateways.
+  * `ip_conflict` – ten sam IP widziany z różnych MAC-ów (od razu pachnie ARP spoofingiem albo grubą mis-konfiguracją).
+  * `greedy_mac` – jeden MAC zbiera wiele IP. Czasem to normalny router, czasem coś bardziej kreatywnego. Tool próbuje odsiać typowe gatewaye.
 * **DHCP:**
-  * rogue DHCP detection – unknown servers, unusual vendors, multiple servers in one segment.
+  * wykrywanie rogue DHCP – nieznane serwery, dziwni vendorzy, wiele serwerów w jednym segmencie.
 * **DNS:**
-  * high-entropy domains (suspected DGA),
-  * exotic / suspicious TLDs.
+  * domeny o wysokiej entropii (podejrzenie DGA),
+  * egzotyczne / podejrzane TLD.
 * **mDNS:**
-  * services you might not want to be broadcasting across the entire network (e.g., file sharing, remote access).
+  * usługi, które niekoniecznie chciałbyś ogłaszać w całej sieci (np. udostępnianie plików, remote access).
 * **JA3:**
-  * better detection of "odd" fingerprints typical of custom tools / malware is planned.
+  * planowane jest lepsze wykrywanie „dziwnych” fingerprintów, typowych dla custom tooli / malware.
 
-## JSON Report – What's Inside
+## JSON Report – co w środku
 
-NetScoutX can output a full JSON report. The `ScanResult` structure looks roughly like this:
+NetScoutX potrafi wyrzucić pełny raport w JSON. Struktura `ScanResult` wygląda mniej więcej tak:
 
 ```json
 {
@@ -504,11 +512,11 @@ NetScoutX can output a full JSON report. The `ScanResult` structure looks roughl
 
 ## Contributing
 
-If NetScoutX is useful to you and you'd like to contribute, please check out `CONTRIBUTING.md`. Pull requests are welcome – from typo fixes to new heuristics and parsers.
+Jeśli NetScoutX Ci się przydaje i chcesz coś dorzucić, zajrzyj do `CONTRIBUTING.md`. Pull requesty są mile widziane – od fixów literówek po nowe heurystyki i parsery.
 
 ## License
 
-NetScoutX is released under the MIT License. Details can be found in the `LICENSE` file.
+NetScoutX jest wydany na licencji MIT. Szczegóły znajdziesz w pliku `LICENSE`.
 
 ## Maintainer Info
 
@@ -517,14 +525,14 @@ NetScoutX is released under the MIT License. Details can be found in the `LICENS
 * Founder of SYNTH1CA LABS | PROSTA SPÓŁKA AKCYJNA
 * CFO - Head of developers
 * Cybersecurity Engineer
-* ex Tattoo Artist
+* ex Tattoo Artist 
 
 ## Credits
 
-* `gopacket` – a solid foundation for capture and decoding.
-* `golang.org/x/net/icmp` – for TTL / ICMP support.
-* The community – for feedback, bug reports, and ideas.
-* `https://www.linkedin.com/in/lucas-piatek-891201376/` and `https://varasystems.eu/` and `https://entropy.varasystems.eu/` – if you want to check me out outside of GitHub.
+* `gopacket` – solidny fundament do capture i dekodowania.
+* `golang.org/x/net/icmp` – pod TTL / ICMP.
+* Społeczność – za feedback, bug reporty i pomysły.
+* `https://www.linkedin.com/in/lucas-piatek-891201376/` i `https://varasystems.eu/` oraz `https://entropy.varasystems.eu/` – jeśli chcesz obczaić mnie poza GitHubem.
 
-If you're interested in what's next for the project, take a look at `codozrobienia.md` – that's where you'll find more "human-readable" notes with ideas for development.
+Jeśli interesuje Cię, co dalej z projektem, zajrzyj do `codozrobienia.md` – tam są bardziej „ludzkie” notatki z pomysłami na rozwój.
 ---
